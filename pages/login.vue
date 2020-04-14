@@ -1,17 +1,18 @@
 <template>
   <div class="container">
-    <h1>Login</h1>
-    <form @submit.prevent="pressed">
-      <div class="login">
-        <input type="email" placeholder="email" v-model="email">
-      </div>
-      <div class="password">
-        <input type="password" placeholder="password" v-model="password">
-      </div>
-      <input type="submit" value="Login">
-      <div class="error" v-if="error">{{error.message}}</div>
-    </form>
-    
+    <div class="wrap">
+      <h1>Login</h1>
+      <form @submit.prevent="pressed">
+        <div class="login">
+          <input type="email" placeholder="email" v-model="email">
+        </div>
+        <div class="password">
+          <input type="password" placeholder="password" v-model="password">
+        </div>
+        <input type="submit" value="Login">
+        <div class="error" v-if="error">{{error}}</div>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -39,7 +40,7 @@ export default Vue.extend({
         this.$router.push('/');
       })
       .catch(error=>{
-        this.error = error;
+        this.error = error.message;
       })
     }
   },
@@ -47,15 +48,33 @@ export default Vue.extend({
 </script>
 
 <style>
-.container {
-  min-height: 100vh;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+input[type=text], input[type=password], input[type=email], input[type=number] select {
+  width: 80%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
+input[type=submit] {
+  width: 80%;
+  background-color: #5050ff;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color:#6363ff;
+}
+.error{
+  color: #ff4d4d
+}
 .title {
   font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
     'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;

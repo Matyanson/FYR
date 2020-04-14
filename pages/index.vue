@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    <h1>Free YouTube Resources</h1>
+    <div class="wrap">
+      <h1>Free YouTube Resources</h1>
+    </div>
   </div>
 </template>
 
@@ -13,15 +15,6 @@ export default Vue.extend({
 </script>
 
 <style>
-.container {
-  min-height: 100vh;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
 .title {
   font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
     'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;

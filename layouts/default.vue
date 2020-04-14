@@ -17,7 +17,15 @@ export default Vue.extend({
 </script>
 
 <style>
+.wrap{
+  background: #ffffffc4;
+  width: 80vw;
+  padding: 50px 0;
+  border-radius: 10px;
+}
+
 html {
+  min-height: 100vh;
   font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: 16px;
@@ -75,7 +83,14 @@ html {
   box-sizing: border-box;
   margin: 0;
 }
-
+.container {
+  min-height: 100vh;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
 .button--green {
   display: inline-block;
   border-radius: 4px;
