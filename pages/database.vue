@@ -2,6 +2,7 @@
   <div class="container">
     <div class="wrap">
       <h1>Database</h1>
+        <song-component v-for="(x, index) in songs" :key="index" :data="x" />
     </div>
   </div>
 </template>
@@ -11,10 +12,71 @@ import Vue from 'vue';
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 
+import Song from '../classes/Song';
+import Sound from '../classes/Sound';
+import songComponent from '../components/Song.vue';
+
 export default Vue.extend({
-    asyncData() {
-        //firebase.db.
+  data() {
+    return {
+      songs: [] as Song[],
+      sound: [] as Sound[]
+    }
+  },
+  methods: {
+    async Load(){
+      let db = firebase.firestore();
+      
+      let allSongs = await db.collection('songs').get();
+      for(const doc of allSongs.docs){
+        const data = doc.data();
+        //save genres
+        let genres = []
+        for(const id of data.genres){
+          let g = await this.getDoc('music_genres', id);
+          genres.push(g?.name);
+        }
+        //save mood
+        let mood = []
+        for(const id of data.mood){
+          let m = await this.getDoc('mood_tag', id);
+          mood.push(m?.name);
+        }
+        //save tags
+        let tags = [];
+        for(const id of data.tags){
+          let t = await this.getDoc('tags', id);
+          tags.push(t?.name);
+        }
+        //push song data to app
+        this.songs.push({
+          author: data.author,
+          name: data.name,
+          bpm: data.bpm,
+          description: data.description,
+          seconds: data.seconds,
+          monetization: data.monetization,
+          genres: genres,
+          links: data.links,
+          mood: mood,
+          source: data.source,
+          tags: tags
+        }as Song);
+      }
+      console.log(this.songs);
     },
+    async getDoc(collection: string, id: string){
+      let db = firebase.firestore();
+      let snapshot = await db.collection(collection).doc(id).get();
+      return snapshot.data();
+    }
+  },
+  async mounted() {
+    await this.Load();
+  },
+  components :{
+    songComponent
+  },
 })
 </script>
 

@@ -38,22 +38,16 @@ export default Vue.extend({
   },
   methods: {
     pressed(){
-      console.log("registring..")
-      console.log(this.name);
       this.error = '';
       if(this.name.length > 1){
         firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
         .then(user=>{
-          
-        console.log("user registered");
           firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(()=>{
-            console.log("user logged");
             this.$router.push('/');
           })
         })
         .catch(error=>this.error = error.message);
       }else {
-        console.log("spatne");
         this.error = "Username has to be 2 characters or longer";
       }
     }
