@@ -38,10 +38,17 @@ export default Vue.extend({
   },
   methods: {
     pressed(){
+      let db = firebase.firestore();
       this.error = '';
       if(this.name.length > 1){
         firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
         .then(user=>{
+          let usersRef = db.collection("users").doc(this.email);
+          usersRef.set({
+            username: this.name,
+            email: this.email,
+            uploadCount: 0
+          })
           firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(()=>{
             this.$router.push('/');
           })

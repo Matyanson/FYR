@@ -6,12 +6,13 @@
         <input type="text" placeholder="name" v-model="songData.name">
         <input type="text" placeholder="author of the song" v-model="songData.author">
         <input type="text" placeholder="description" v-model="songData.description">
-        <multi-select :data="allTags" :getItems.sync="songData.tags" placeholder="select Tags" :custom="true" />
+        <multi-select :data="allTags" :getItems.sync="songData.tags" placeholder="select Tags" :getCustom.sync="customTags" />
         <multi-select :data="allMood" :getItems.sync="songData.mood" placeholder="select Mood Tags"/>
         <multi-select :data="allGenres" :getItems.sync="songData.genres" placeholder="select Genres"/>
         <input type="submit" value="Upload">
         <div class="error" v-if="error">{{error}}</div>
       </form>
+      <button @click="()=>{this.test()}">test</button>
     </div>
   </div>
 </template>
@@ -33,24 +34,54 @@ export default Vue.extend({
         seconds: 0,
         bpm: 0,
         links: [""],
-        genres: [],
-        mood: [],
-        tags: [],
+        genres: [] as string[],
+        mood: [] as string[],
+        tags: [] as string[],
       },
       error: "",
       allTags: [] as IDPair[],
       allGenres: [] as IDPair[],
       allMood: [] as IDPair[],
+      customTags: [] as string[]
     }
   },
   computed: {
 
   },
   methods: {
+    test(){
+      console.log("reroute");
+      this.$router.push("/");
+    },
     pressed(){
       let db = firebase.firestore();
-      console.log(this.songData);
+      //create new tags
+      for(const tag of this.customTags){
+        let newTagRef = db.collection("tags").doc();
+        this.songData.tags.push(newTagRef.id);
+        newTagRef.set({
+          name: tag,
+          searched: 0,
+          used: 1
+        });
+      }
+      //update old tags
+      let tagsRef = db.collection("tags");
+      for(const tagID of this.songData.tags){
+        tagsRef.doc(tagID).update({
+          used: firebase.firestore.FieldValue.increment(1)
+        })
+      }
+      //update genres
+      let genresRef = db.collection("music_genres");
+      for(const tagID of this.songData.genres){
+        tagsRef.doc(tagID).update({
+          used: firebase.firestore.FieldValue.increment(1)
+        })
+      }
+
       db.collection("songs").add(this.songData);
+      this.$router.push('/');
     },
     async Load(){
       let db = firebase.firestore();

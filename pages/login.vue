@@ -4,7 +4,7 @@
       <h1>Login</h1>
       <form @submit.prevent="pressed">
         <div class="login">
-          <input type="email" placeholder="email" v-model="email">
+          <input type="text" placeholder="email or Username" v-model="email">
         </div>
         <div class="password">
           <input type="password" placeholder="password" v-model="password">
@@ -22,6 +22,7 @@ import * as firebase from "firebase/app";
 
 // Add the Firebase services that you want to use
 import "firebase/auth";
+import "firebase/firestore";
 
 export default Vue.extend({
   data() {
@@ -35,12 +36,30 @@ export default Vue.extend({
     pressed(){
       this.error = '';
       firebase.auth().signInWithEmailAndPassword(this.email,this.password)
-      .then(user=>{
-        console.log(user);
+      .then(()=>{
         this.$router.push('/');
       })
       .catch(error=>{
         this.error = error.message;
+      })
+      //loggin by username:
+      let db = firebase.firestore();
+      db.collection("users").where("username", "==", this.email).limit(1).get().then(querySnapshot => {
+        if (!querySnapshot.empty) {
+          //We know there is one doc in the querySnapshot
+          const doc = querySnapshot.docs[0];
+          let realEmail = doc.id;
+          firebase.auth().signInWithEmailAndPassword(realEmail,this.password)
+          .then(()=>{
+            this.$router.push('/');
+          })
+          .catch(error=>{
+            this.error = "Username and password don't match";
+          })
+        }
+      })
+      .catch(e=>{
+        this.error = "Username and password don't match";
       })
     }
   },

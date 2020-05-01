@@ -22,6 +22,10 @@ export default Vue.extend({
   width: 80vw;
   padding: 50px 0;
   border-radius: 10px;
+  display: flex;
+  flex-flow: column;
+  align-items: stretch;
+  justify-content: center;
 }
 
 html {
@@ -85,6 +89,7 @@ html {
 }
 .container {
   min-height: 100vh;
+  padding-top: 50px;
   margin: 0 auto;
   display: flex;
   justify-content: center;

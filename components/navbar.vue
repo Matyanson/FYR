@@ -8,7 +8,7 @@
             <li><nuxt-link to="/help">Help from comunity</nuxt-link></li>
             <li v-if="!isLoggedIn"><nuxt-link to="/login">Login</nuxt-link></li>
             <li v-if="!isLoggedIn"><nuxt-link to="/register">Register</nuxt-link></li>
-            <li v-if="isLoggedIn" class="right">{{`logged in as: ${email}`}}</li>
+            <li v-if="isLoggedIn" class="right">{{`logged in as: ${(name? name : email)}`}}</li>
             <li v-if="isLoggedIn" v-on:click="logout"><a href="#">LogOut</a></li>
       </ul>
   </div>
@@ -17,12 +17,14 @@
 import Vue from 'vue';
 import * as firebase from "firebase/app";
 import "firebase/auth";
+import "firebase/firestore";
 
 export default Vue.extend({
     data() {
       return {
           isLoggedIn: false,
-          email: ''
+          email: '',
+          name: ''
       }
   },
   mounted() {
@@ -34,10 +36,17 @@ export default Vue.extend({
               if(user){
                   this.isLoggedIn = true;
                   this.email = user.email;
+
+                  //get user data
+                  let db = firebase.firestore();
+                  db.collection("users").doc(this.email).get().then(x=>{
+                  let userData = x.data();
+                  if(userData.username)
+                    this.name = userData.username;
+                  })
               }
               else{
                   this.isLoggedIn = false;
-                  this.email = '';
               }
           })
       },

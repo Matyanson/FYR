@@ -7,8 +7,11 @@
         </datalist>
       </form>
       <div class="selected">
-          <div :class="'item'+ (item.custom? ' custom':'')" v-for="(item, index) in selectedItems" :key="index" @click="()=>{returnItem(item.text)}">
+          <div class="item" v-for="(item, index) in selectedItems" :key="index" @click="()=>{returnItem(item.text)}">
               {{ item.text }}
+          </div>
+          <div class="item custom" v-for="(item, index) in customItems" :key="index+selectedItems.length" @click="()=>{returnCustomItem(item)}">
+              {{ item }}
           </div>
       </div>
       
@@ -20,18 +23,19 @@ import IDPair from '../classes/IDPair';
 
 export default Vue.extend({
     props: {
-        data: Array,
+        data: Array as ()=> IDPair[],
         getItems: Array,
         placeholder: String,
-        custom:{
-            type: Boolean,
-            default: false
+        getCustom:{
+            type: Array,
+            default: null
         }
     },
     data() {
         return {
             items: this.data as IDPair[],
             text: "",
+            customItems: [] as string[],
             selectedItems: [] as IDPair[]
         }
     },
@@ -41,7 +45,7 @@ export default Vue.extend({
     },
     methods: {
         pressed(){
-            console.log(this.custom);
+            console.log(this.customItems);
             this.addItem(this.text); 
             this.text = "";
         },
@@ -55,12 +59,9 @@ export default Vue.extend({
             //not exact
             else{
                 console.log("not exact match");
-                if(this.custom && name!==""){
-                    this.selectedItems.push({
-                        text: name,
-                        id: "",
-                        custom: true
-                    })
+                if(this.getCustom && name!==""){
+                    this.customItems.push(name);
+                    this.$emit('update:getCustom', this.customItems);
                 }
                 else{
                     index = this.items.findIndex((x)=> x.text.toLowerCase().includes(name.toLowerCase()));
@@ -75,8 +76,14 @@ export default Vue.extend({
             let index =this.selectedItems.findIndex(x=>x.text.toLowerCase() === name.toLowerCase());
             if(index>-1){
                 let item = this.selectedItems.splice(index,1)[0];
-                if(!item.custom)
                     this.items.push(item);
+            }
+            this.$emit('update:getItems', this.selectedIDS);
+        },
+        returnCustomItem(name: string){
+            let index =this.customItems.findIndex(x=>x.toLowerCase() === name.toLowerCase());
+            if(index>-1){
+                this.customItems.splice(index,1)[0];
             }
             this.$emit('update:getItems', this.selectedIDS);
         },
