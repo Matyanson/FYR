@@ -14,7 +14,8 @@
   "main": "lib/index.js",
   "dependencies": {
     "firebase-admin": "^8.9.0",
-    "firebase-functions": "^3.3.0"
+    "firebase-functions": "^3.3.0",
+    "@nuxtjs/axios": "^5.3.6"
   },
   "devDependencies": {
     "typescript": "^3.2.2",
