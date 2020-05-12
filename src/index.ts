@@ -14,9 +14,10 @@ admin.initializeApp();
 exports.getMusic = functions.https.onCall(async (data, context)=>{
 
     const {search = "", monetization = 0, tags = [], mood = [], genre = [], sortBy = "relevance" } = data;
+    let monetiz = Number(monetization);
     let result = [] as Song[];
     
-    let YoutubeSongs = await fetchFromYT(search, monetization, genre, tags, mood, sortBy);
+    let YoutubeSongs = await fetchFromYT(search, monetiz, genre, tags, mood, sortBy);
     result = YoutubeSongs.map((x:any)=>{
         return x.song
     })
@@ -70,8 +71,8 @@ exports.getMusic = functions.https.onCall(async (data, context)=>{
             })
             result[i].song.genres = genre;
         }
-        if(detail.license){
-            result[i].song.monetization = detail.status.license === "creativeCommon"? 1 : 0;
+        if(detail.status.license && result[i].song.monetization === -1){
+            result[i].song.monetization = detail.status.license === "creativeCommon"? 1 : -1;
         }
     }
     return result;
