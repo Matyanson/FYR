@@ -1,22 +1,7 @@
-# FYR
+# COMPONENTS
 
-> Free YouTube Resources
+**This directory is not required, you can delete it if you don't want to use it.**
 
-## Build Setup
+The components directory contains your Vue.js Components.
 
-```bash
-# install dependencies
-$ npm install
-
-# serve with hot reload at localhost:3000
-$ npm run dev
-
-# build for production and launch server
-$ npm run build
-$ npm run start
-
-# generate static project
-$ npm run generate
-```
-
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+_Nuxt.js doesn't supercharge these components._

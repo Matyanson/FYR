@@ -1,4 +1,3 @@
-import genres from './genres';
 interface Song{
     author: string,
     name: string,
@@ -6,10 +5,11 @@ interface Song{
     description: string,
     seconds: number,
     monetization: number,
-    genres: string[],
-    links: string[],
-    mood: string[],
+    genre: string[],
+    links: {[key:string]:string},
+    mood: number,
     source: number,
-    tags?: string[]
+    tags: string[],
+    img?: string
 }
 export default Song;
