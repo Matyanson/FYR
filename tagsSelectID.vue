@@ -47,7 +47,12 @@ export default Vue.extend({
             pointer: -1
         }
     },
-    mounted() {
+    fetch() {
+        console.log(this.selectedItems);
+        console.log("setting selected to empty");
+        this.text = "";
+        this.selectedItems = [];
+        this.update();
     },
     methods: {
         pressed(){
